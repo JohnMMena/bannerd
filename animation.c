@@ -60,7 +60,7 @@ int animation_run(struct animation *banner, int frames)
 }
 
 int animation_init(struct string_list *filenames, int filenames_count,
-		struct screen_info *fb, struct animation *a)
+		struct screen_info *fb, struct animation *a, int x_offset, int y_offset)
 {
     int i;
     struct image_info *frame;
@@ -89,8 +89,8 @@ int animation_init(struct string_list *filenames, int filenames_count,
     screen_w = fb->width;
     screen_h = fb->height;
     frame = &a->frames[0];
-    a->x = screen_w / 2;
-    a->y = screen_h / 2;
+    a->x = (screen_w / 2) + x_offset;
+    a->y = (screen_h / 2) + y_offset;
 
     return 0;
 }

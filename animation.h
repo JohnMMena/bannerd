@@ -29,7 +29,7 @@ struct animation {
 };
 
 int animation_init(struct string_list *filenames, int filenames_count,
-		struct screen_info *fb, struct animation *a);
+		struct screen_info *fb, struct animation *a, int x_offset, int y_offset);
 int animation_run(struct animation *banner, int frames);
 
 #endif /* _ANIMATION_H */

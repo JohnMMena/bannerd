@@ -1,3 +1,4 @@
+
 /*
  *  A framebuffer animation daemon
  *
@@ -38,6 +39,8 @@ int Interactive = 0; /* Not daemon */
 int LogDebug = 0; /* Do not suppress debug messages when logging */
 int RunCount = -1; /* Repeat a given number of times, then exit */
 int PreserveMode = 0; /* Do not restore previous framebuffer mode */
+int XOffset = 0;
+int YOffset = 0;
 char *PipePath = NULL; /* A command pipe to control animation */
 
 static struct screen_info _Fb;
@@ -90,12 +93,14 @@ static int get_options(int argc, char **argv)
 			{"run-count",	optional_argument,0, 'c'},    /* -c */
 			{"command-pipe",required_argument,0, 'i'},    /* -i */
 			{"preserve-mode",no_argument,&PreserveMode,1},/* -p */
+			{"x-offset",required_argument,0,'x'},
+			{"y-offset",required_argument,0,'y'},
 			{0, 0, 0, 0}
 	};
 
 	while (1) {
 		int option_index = 0;
-		int c = getopt_long(argc, argv, "Dvc::i:p", _longopts,
+		int c = getopt_long(argc, argv, "Dvc::i:px:y:", _longopts,
 				&option_index);
 
 		if (c == -1)
@@ -129,6 +134,16 @@ static int get_options(int argc, char **argv)
 
 		case 'i':
 			PipePath = optarg;
+			break;
+
+		case 'x':
+			if (optarg)
+				XOffset = (int)strtol(optarg, NULL, 0);
+			break;
+
+		case 'y':
+			if (optarg)
+				YOffset = (int)strtol(optarg, NULL, 0);
 			break;
 
 		case '?':
@@ -259,7 +274,7 @@ static int init(int argc, char **argv, struct animation *banner)
 		return 1;
 	if (init_proper_exit())
 		return 1;
-	if (animation_init(filenames, filenames_count, &_Fb, banner))
+	if (animation_init(filenames, filenames_count, &_Fb, banner, XOffset, YOffset))
 		return 1;
 	string_list_destroy(filenames);
 
